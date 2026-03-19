@@ -30,3 +30,9 @@ go.work.sum
 # Editor/IDE
 # .idea/
 # .vscode/
+/.idea/.gitignore
+/.idea/EasyParsingForGo.iml
+/.idea/encodings.xml
+/.idea/go.imports.xml
+/.idea/modules.xml
+/.idea/vcs.xml

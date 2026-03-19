@@ -1083,3 +1083,55 @@ func TestMap(t *testing.T) {
 		}
 	})
 }
+
+func TestEOF(t *testing.T) {
+	t.Run("Success: at end of string", func(t *testing.T) {
+		input := ""
+		ctx := NewParsingContext(input)
+		p := EOF()
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if !res.Context.AtEnd() {
+			t.Errorf("Expected context to be at end")
+		}
+	})
+
+	t.Run("Success: after parsing all input", func(t *testing.T) {
+		input := "a"
+		ctx := NewParsingContext(input)
+		// Parse 'a' then check for EOF
+		p := Combine(OneChar('a'), EOF())
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result.Left != 'a' {
+			t.Errorf("Expected 'a', got %q", res.Result.Left)
+		}
+		if !res.Context.AtEnd() {
+			t.Errorf("Expected context to be at end")
+		}
+	})
+
+	t.Run("Failure: not at end of string", func(t *testing.T) {
+		input := "abc"
+		ctx := NewParsingContext(input)
+		p := EOF()
+
+		_, err := p(ctx)
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		expectedErr := "expected EOF, found \"abc\""
+		if err.Error() != expectedErr {
+			t.Errorf("Incorrect error message: expected %q, got %q", expectedErr, err.Error())
+		}
+	})
+}

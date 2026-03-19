@@ -381,3 +381,15 @@ func Integer() Parser[int] {
 		}, nil
 	}
 }
+
+func EOF() Parser[struct{}] {
+	return func(context ParsingContext) (ParseResult[struct{}], error) {
+		if !context.AtEnd() {
+			return ParseResult[struct{}]{}, fmt.Errorf("expected EOF, found %q", string(context.Remaining))
+		}
+		return ParseResult[struct{}]{
+			Context: context,
+			Result:  struct{}{},
+		}, nil
+	}
+}

@@ -30,13 +30,13 @@ Some basic parser combinators are implemented.
 - `Alphanumeric()`: Matches a letter or a digit.
 - `EOF()`: Matches the end of the input.
 - `Not(parser)`: Succeeds if the specified parser fails, without consuming input.
+- `Skip(parser)`: Runs a parser but discards its result.
 
 ## To do
 
 - `OneOf(string)`: Matches any character in the provided string.
 - `NoneOf(string)`: Matches any character not in the provided string.
 - `Times(n, parser)`: Applies a parser exactly `n` times.
-- `Skip(parser)`: Runs a parser but discards its result.
 - `Regex(pattern)`: Matches a regular expression.
 - `Float()`: Matches a floating-point number.
 - `Many1(parser)`: Like `Many`, but requires at least one match to succeed.

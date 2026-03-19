@@ -391,7 +391,9 @@ func Integer() Parser[int] {
 func EOF() Parser[struct{}] {
 	return func(context ParsingContext) (ParseResult[struct{}], error) {
 		if !context.AtEnd() {
-			return ParseResult[struct{}]{}, fmt.Errorf("expected EOF, found %q", string(context.Remaining))
+			return ParseResult[struct{}]{
+				Context: context,
+			}, fmt.Errorf("expected EOF, found %q", string(context.Remaining))
 		}
 		return ParseResult[struct{}]{
 			Context: context,
@@ -409,6 +411,23 @@ func Not[T any](parser Parser[T]) Parser[struct{}] {
 				Result:  struct{}{},
 			}, nil
 		}
-		return ParseResult[struct{}]{}, fmt.Errorf("parser should not have succeeded")
+		return ParseResult[struct{}]{
+			Context: context,
+		}, fmt.Errorf("parser should not have succeeded")
+	}
+}
+
+func Skip[T any](parser Parser[T]) Parser[struct{}] {
+	return func(context ParsingContext) (ParseResult[struct{}], error) {
+		result, err := parser(context)
+		if err != nil {
+			return ParseResult[struct{}]{
+				Context: context,
+			}, err
+		}
+		return ParseResult[struct{}]{
+			Result:  struct{}{},
+			Context: result.Context,
+		}, nil
 	}
 }

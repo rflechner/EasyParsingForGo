@@ -1264,10 +1264,63 @@ func TestAlphanumeric(t *testing.T) {
 		input := ""
 		ctx := NewParsingContext(input)
 		p := Alphanumeric()
+		_, err := p(ctx)
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+	})
+}
+
+func TestSkip(t *testing.T) {
+	t.Run("Success: skips digit", func(t *testing.T) {
+		input := "1abc"
+		ctx := NewParsingContext(input)
+		p := Skip(Digit())
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		// Result should be struct{}
+		if res.Result != (struct{}{}) {
+			t.Errorf("Expected struct{}, got %v", res.Result)
+		}
+
+		// Context should be advanced
+		if string(res.Context.Remaining) != "abc" {
+			t.Errorf("Expected remaining \"abc\", got %q", string(res.Context.Remaining))
+		}
+	})
+
+	t.Run("Failure: parser fails", func(t *testing.T) {
+		input := "abc"
+		ctx := NewParsingContext(input)
+		p := Skip(Digit())
 
 		_, err := p(ctx)
 		if err == nil {
 			t.Fatal("Expected error, got nil")
+		}
+	})
+
+	t.Run("Success: skip spaces and get integer", func(t *testing.T) {
+		input := "   123"
+		ctx := NewParsingContext(input)
+		// Skip Spaces then get Integer
+		p := Combine(Skip(Spaces()), Integer())
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result.Right != 123 {
+			t.Errorf("Expected 123, got %d", res.Result.Right)
+		}
+
+		if !res.Context.AtEnd() {
+			t.Errorf("Expected context at end, got %q", string(res.Context.Remaining))
 		}
 	})
 }

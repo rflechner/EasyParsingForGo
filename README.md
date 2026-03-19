@@ -29,3 +29,17 @@ Some basic parser combinators are implemented.
 - `LazyParse(factory)`: Allows defining recursive parsers by delaying their creation.
 
 ## To do
+
+- `EOF()`: Matches the end of the input.
+- `Alphanumeric()`: Matches a letter or a digit.
+- `OneOf(string)`: Matches any character in the provided string.
+- `NoneOf(string)`: Matches any character not in the provided string.
+- `Times(n, parser)`: Applies a parser exactly `n` times.
+- `Skip(parser)`: Runs a parser but discards its result.
+- `Regex(pattern)`: Matches a regular expression.
+- `Float()`: Matches a floating-point number.
+- `Not(parser)`: Succeeds if the specified parser fails, without consuming input.
+- `Many1(parser)`: Like `Many`, but requires at least one match to succeed.
+- `Attempt(parser)`: Backtracking parser that recovers the original state on failure.
+
+

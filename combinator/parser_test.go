@@ -1135,3 +1135,87 @@ func TestEOF(t *testing.T) {
 		}
 	})
 }
+
+func TestAlphanumeric(t *testing.T) {
+	t.Run("Success: letter 'a'", func(t *testing.T) {
+		input := "abc"
+		ctx := NewParsingContext(input)
+		p := Alphanumeric()
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result != 'a' {
+			t.Errorf("Incorrect result: expected 'a', got %q", res.Result)
+		}
+
+		if string(res.Context.Remaining) != "bc" {
+			t.Errorf("Incorrect remaining context: expected \"bc\", got %q", string(res.Context.Remaining))
+		}
+	})
+
+	t.Run("Success: letter 'A'", func(t *testing.T) {
+		input := "Abc"
+		ctx := NewParsingContext(input)
+		p := Alphanumeric()
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result != 'A' {
+			t.Errorf("Incorrect result: expected 'A', got %q", res.Result)
+		}
+	})
+
+	t.Run("Success: digit '1'", func(t *testing.T) {
+		input := "1abc"
+		ctx := NewParsingContext(input)
+		p := Alphanumeric()
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result != '1' {
+			t.Errorf("Incorrect result: expected '1', got %q", res.Result)
+		}
+	})
+
+	t.Run("Failure: special character", func(t *testing.T) {
+		input := "#abc"
+		ctx := NewParsingContext(input)
+		p := Alphanumeric()
+
+		_, err := p(ctx)
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+	})
+
+	t.Run("Failure: space", func(t *testing.T) {
+		input := " abc"
+		ctx := NewParsingContext(input)
+		p := Alphanumeric()
+
+		_, err := p(ctx)
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+	})
+
+	t.Run("Failure: end of string", func(t *testing.T) {
+		input := ""
+		ctx := NewParsingContext(input)
+		p := Alphanumeric()
+
+		_, err := p(ctx)
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+	})
+}

@@ -352,7 +352,7 @@ func SeparatedBy[A any, B any](parser Parser[A], separator Parser[B], matchTaili
 }
 
 func Spaces() Parser[[]rune] {
-	return Many(Satisfy(func(c rune) bool { return c == ' ' || c == '\t' || c == '\n' || c == '\r' }))
+	return Many(Satisfy(func(c rune) bool { return unicode.IsSpace(c) }))
 }
 
 func LazyParse[T any](factory func() Parser[T]) Parser[T] {
@@ -363,6 +363,12 @@ func LazyParse[T any](factory func() Parser[T]) Parser[T] {
 
 func Digit() Parser[rune] {
 	return Satisfy(unicode.IsDigit)
+}
+
+func Alphanumeric() Parser[rune] {
+	return Satisfy(func(r rune) bool {
+		return unicode.IsLetter(r) || unicode.IsDigit(r)
+	})
 }
 
 func Integer() Parser[int] {

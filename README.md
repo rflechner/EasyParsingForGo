@@ -27,11 +27,11 @@ Some basic parser combinators are implemented.
 - `UntilText(parser, delimiter, includeDelimiter)`: Applies a parser to all text until a specific delimiter is encountered.
 - `SeparatedBy(parser, separator, matchTrailing)`: Parses a list of elements separated by a delimiter.
 - `LazyParse(factory)`: Allows defining recursive parsers by delaying their creation.
+- `Alphanumeric()`: Matches a letter or a digit.
+- `EOF()`: Matches the end of the input.
 
 ## To do
 
-- `EOF()`: Matches the end of the input.
-- `Alphanumeric()`: Matches a letter or a digit.
 - `OneOf(string)`: Matches any character in the provided string.
 - `NoneOf(string)`: Matches any character not in the provided string.
 - `Times(n, parser)`: Applies a parser exactly `n` times.

@@ -399,3 +399,16 @@ func EOF() Parser[struct{}] {
 		}, nil
 	}
 }
+
+func Not[T any](parser Parser[T]) Parser[struct{}] {
+	return func(context ParsingContext) (ParseResult[struct{}], error) {
+		_, err := parser(context)
+		if err != nil {
+			return ParseResult[struct{}]{
+				Context: context,
+				Result:  struct{}{},
+			}, nil
+		}
+		return ParseResult[struct{}]{}, fmt.Errorf("parser should not have succeeded")
+	}
+}

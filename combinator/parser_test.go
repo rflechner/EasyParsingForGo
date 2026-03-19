@@ -1136,6 +1136,58 @@ func TestEOF(t *testing.T) {
 	})
 }
 
+func TestNot(t *testing.T) {
+	t.Run("Success: parser fails", func(t *testing.T) {
+		input := "abc"
+		ctx := NewParsingContext(input)
+		// Not(Digit()) should succeed on "abc"
+		p := Not(Digit())
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		// It should not consume any input
+		if string(res.Context.Remaining) != "abc" {
+			t.Errorf("Expected context not to be consumed, got %q", string(res.Context.Remaining))
+		}
+	})
+
+	t.Run("Failure: parser succeeds", func(t *testing.T) {
+		input := "123"
+		ctx := NewParsingContext(input)
+		// Not(Digit()) should fail on "123"
+		p := Not(Digit())
+
+		_, err := p(ctx)
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		expectedErr := "parser should not have succeeded"
+		if err.Error() != expectedErr {
+			t.Errorf("Incorrect error message: expected %q, got %q", expectedErr, err.Error())
+		}
+	})
+
+	t.Run("Success: used with other parsers", func(t *testing.T) {
+		input := "abc"
+		ctx := NewParsingContext(input)
+		// Match any char that is NOT a digit, then match it for real
+		p := Combine(Not(Digit()), AnyChar())
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result.Right != 'a' {
+			t.Errorf("Expected 'a', got %q", res.Result.Right)
+		}
+	})
+}
+
 func TestAlphanumeric(t *testing.T) {
 	t.Run("Success: letter 'a'", func(t *testing.T) {
 		input := "abc"

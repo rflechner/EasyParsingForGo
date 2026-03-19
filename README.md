@@ -29,6 +29,7 @@ Some basic parser combinators are implemented.
 - `LazyParse(factory)`: Allows defining recursive parsers by delaying their creation.
 - `Alphanumeric()`: Matches a letter or a digit.
 - `EOF()`: Matches the end of the input.
+- `Not(parser)`: Succeeds if the specified parser fails, without consuming input.
 
 ## To do
 
@@ -38,7 +39,6 @@ Some basic parser combinators are implemented.
 - `Skip(parser)`: Runs a parser but discards its result.
 - `Regex(pattern)`: Matches a regular expression.
 - `Float()`: Matches a floating-point number.
-- `Not(parser)`: Succeeds if the specified parser fails, without consuming input.
 - `Many1(parser)`: Like `Many`, but requires at least one match to succeed.
 - `Attempt(parser)`: Backtracking parser that recovers the original state on failure.
 

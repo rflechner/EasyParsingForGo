@@ -1,11 +1,12 @@
 package combinator
 
 import (
-	"easyparsing4go/helpers"
 	"errors"
 	"fmt"
 	"strconv"
 	"unicode"
+
+	"github.com/rflechner/EasyParsingForGo/helpers"
 )
 import "container/list"
 

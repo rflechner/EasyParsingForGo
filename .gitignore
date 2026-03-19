@@ -36,3 +36,5 @@ go.work.sum
 /.idea/go.imports.xml
 /.idea/modules.xml
 /.idea/vcs.xml
+
+.DS_Store

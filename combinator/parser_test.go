@@ -938,3 +938,94 @@ func TestLazyParse(t *testing.T) {
 		}
 	})
 }
+
+func TestInteger(t *testing.T) {
+	t.Run("Success: single digit", func(t *testing.T) {
+		input := "1"
+		ctx := NewParsingContext(input)
+		p := Integer()
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result != 1 {
+			t.Errorf("Incorrect result: expected 1, got %d", res.Result)
+		}
+
+		if !res.Context.AtEnd() {
+			t.Errorf("Expected context to be at end, got %q", string(res.Context.Remaining))
+		}
+	})
+
+	t.Run("Success: multiple digits", func(t *testing.T) {
+		input := "123"
+		ctx := NewParsingContext(input)
+		p := Integer()
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result != 123 {
+			t.Errorf("Incorrect result: expected 123, got %d", res.Result)
+		}
+
+		if !res.Context.AtEnd() {
+			t.Errorf("Expected context to be at end, got %q", string(res.Context.Remaining))
+		}
+	})
+
+	t.Run("Success: digits followed by text", func(t *testing.T) {
+		input := "123abc"
+		ctx := NewParsingContext(input)
+		p := Integer()
+
+		res, err := p(ctx)
+		if err != nil {
+			t.Fatalf("Unexpected error: %v", err)
+		}
+
+		if res.Result != 123 {
+			t.Errorf("Incorrect result: expected 123, got %d", res.Result)
+		}
+
+		if string(res.Context.Remaining) != "abc" {
+			t.Errorf("Incorrect remaining context: expected \"abc\", got %q", string(res.Context.Remaining))
+		}
+	})
+
+	t.Run("Failure: no digits", func(t *testing.T) {
+		input := "abc"
+		ctx := NewParsingContext(input)
+		p := Integer()
+
+		_, err := p(ctx)
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		expectedErr := "expected at least one digit"
+		if err.Error() != expectedErr {
+			t.Errorf("Incorrect error message: expected %q, got %q", expectedErr, err.Error())
+		}
+	})
+
+	t.Run("Failure: empty string", func(t *testing.T) {
+		input := ""
+		ctx := NewParsingContext(input)
+		p := Integer()
+
+		_, err := p(ctx)
+		if err == nil {
+			t.Fatal("Expected error, got nil")
+		}
+
+		expectedErr := "expected at least one digit"
+		if err.Error() != expectedErr {
+			t.Errorf("Incorrect error message: expected %q, got %q", expectedErr, err.Error())
+		}
+	})
+}

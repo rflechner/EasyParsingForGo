@@ -5,16 +5,6 @@ import (
 	"testing"
 )
 
-func TestParse(t *testing.T) {
-	input := "hello"
-	expected := "Parsed: hello"
-	result := Parse(input)
-
-	if result != expected {
-		t.Errorf("Parse(%q) = %q, expected %q", input, result, expected)
-	}
-}
-
 func TestOneChar(t *testing.T) {
 	t.Run("Success: read one character", func(t *testing.T) {
 		input := "abc"

@@ -17,24 +17,6 @@ type ParseResult[T any] struct {
 
 type Parser[T any] func(context ParsingContext) (ParseResult[T], error)
 
-func Map[T any, Output any](p Parser[T], f func(T) Output) Parser[Output] {
-	return func(context ParsingContext) (ParseResult[Output], error) {
-		result, err := p(context)
-		if err != nil {
-			return ParseResult[Output]{}, err
-		}
-		return ParseResult[Output]{
-			Result:  f(result.Result),
-			Context: result.Context,
-		}, nil
-	}
-}
-
-// Parse analyzes a string and returns a result
-func Parse(input string) string {
-	return "Parsed: " + input
-}
-
 // Combine combines two parsers into a new parser that parses the input using both parsers in sequence.
 func Combine[A any, B any](left Parser[A], right Parser[B]) Parser[struct {
 	Left  A
